@@ -14,15 +14,15 @@
     <div class="section" id="inputs">
         <h2>Inputs</h2>
         <div class="inputOutputPair">
-            <label for="hoursPerWeek">Current Hours Per Week:</label>
-            <input type="number" id="hoursPerWeek">
+            <label for="hoursPerWeek">Current Hours Per Day:</label>
+            <label >7 Hours 24 Minutes a day</label>
         </div>
         <div class="inputOutputPair">
             <label for="currentSalary">Current Salary:</label>
             <input type="number" id="currentSalary">
         </div>
         <div class="inputOutputPair">
-            <label for="commuteTimeHours">Commute Time:</label>
+            <label for="commuteTimeHours">Commute Time (Total per day):</label>
             <div class="timeInputs">
                 <div class="timeInputHourContainer">
                     <label>H</label>
@@ -49,25 +49,38 @@
     <div class="section" id="outputs">
         <h2>Outputs</h2>
         <div class="inputOutputPair">
-            <label>Lost Time:</label>
-            <span class="output">--</span>
+            <label>Lost Time (to commute):</label>
+            <span id="lostTime" class="output">--</span>
         </div>
         <div class="inputOutputPair">
             <label>Lost Money:</label>
-            <span class="output">--</span>
+            <span id="moneyOutput" class="output">--</span>
+        </div>
+        <div class="inputOutputPair">
+            <label>Final Sallery:</label>
+            <span id="finalSallery" class="output">--</span>
         </div>
         <div class="inputOutputPair">
             <label>Additional Carbon:</label>
-            <span class="output">--</span>
+            <span id="additionalCarbon" class="output">--</span>
         </div>
         <div class="inputOutputPair">
-            <label>Percentage Salary Decrease:</label>
-            <span class="output">--</span>
+            <label>Salary per Hour:</label>
+            <span id="salaryPerHourOutput" class="output">--</span>
         </div>
         <div class="inputOutputPair">
-            <label>Final Salary:</label>
-            <span class="output">--</span>
+            <label>Salary per Hour (inc travel and fuel):</label>
+            <span id="salaryPerHourTravelFuelOutput" class="output">--</span>
         </div>
+        <div class="inputOutputPair">
+            <label>Hourly Paycut (inc travel and fuel):</label>
+            <span id="hourlyPaycut" class="output">--</span>
+        </div>
+        <div class="inputOutputPair">
+            <label>Percentage Salary Decrease (inc travel and fuel):</label>
+            <span id="percentageSalleryDecrease" class="output">--</span>
+        </div>
+ 
     </div>
 </body>
 
