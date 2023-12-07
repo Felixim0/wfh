@@ -56,6 +56,8 @@ function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commute
     const selectedFuelBox = Array.from(fuelBoxes).find(box => box.classList.contains('selected'));
     const selectedFuelBoxValue = selectedFuelBox ? selectedFuelBox.innerText : null;
 
+    // Multiply by mp MULTIPLIER
+    const mp = getPercentMultiplier(percentageBoxValue);
 
     console.log("Calculating final values with:", 
         currentSalaryValue, 
@@ -129,12 +131,24 @@ function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commute
     // calcualte hourly paycut
     const hourlyPaycut = salaryPerHour - salaryPerHourIncludingCommuteFuel;
 
+
     // Calculate
     setOutputs(lostTime, fuelCostPerYear, additionalCarbon, percentageSalaryDecrease,
          salaryMinusFuel, salaryPerHour, salaryPerHourIncludingCommuteFuel, hourlyPaycut);
 
 }
 
+function getPercentMultiplier(percentageBoxValue) {
+    if (percentageBoxValue === '100%') {
+        return 1
+    } else if (percentageBoxValue === '60%') {
+        return 0.6
+    } else if (percentageBoxValue === '40%') {
+        return 0.4
+    } else if (percentageBoxValue === '20%') {
+        return 0.2
+    }
+}
 function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecrease,
      finalSalary, salaryPerHour, salaryPerHourTravelFuel, hourlyPaycut) {
     const lostMoneyOutput = document.querySelector('#moneyOutput');
@@ -151,7 +165,7 @@ function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecre
     lostTimeOutput.textContent = `Hours: ${lostHours}, Minutes: ${lostMinutes}`;
 
     lostMoneyOutput.textContent = `${parseFloat(lostMoney).toFixed(2)}`;
-    additionalCarbonOutput.textContent = `${additionalCarbon} Kg`;
+    additionalCarbonOutput.textContent = `${parseFloat(additionalCarbon).toFixed(2)} Kg`;
     percentageSalaryDecreaseOutput.textContent = `${parseFloat(percentageSalaryDecrease).toFixed(2)}%`;
     finalSalaryOutput.textContent = `${parseFloat(finalSalary).toFixed(2)}`;
     salaryPerHourOutput.textContent = `${parseFloat(salaryPerHour).toFixed(2)}`;
