@@ -1,6 +1,8 @@
 body {
     font-family: Arial, sans-serif;
     padding: 1em;
+    max-width: 40em;
+    margin: 0 auto; /* This centers the body content if the viewport is wider than 400px */
 }
 
 .section {
