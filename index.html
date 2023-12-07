@@ -1,6 +1,6 @@
 <!doctype html>
 <title>Unofficail WFH calculaotr</title>
-<link rel=stylesheet href="style.css">
+<link rel=stylesheet href="index.css">
 
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,5 +10,59 @@
   <h1>WFH Calculaotr</h1>
 </header>
 
+<body>
+    <div class="section" id="inputs">
+        <h2>Inputs</h2>
+        <div class="inputOutputPair">
+            <label for="hoursPerWeek">Current Hours Per Week:</label>
+            <input type="number" id="hoursPerWeek">
+        </div>
+        <div class="inputOutputPair">
+            <label for="currentSalary">Current Salary:</label>
+            <input type="number" id="currentSalary">
+        </div>
+        <div class="inputOutputPair">
+            <label for="commuteTime">Hours/Minutes Commute:</label>
+            <input type="text" id="commuteTime">
+        </div>
+        <div class="inputOutputPair">
+            <label for="fuelCost">Cost of Fuel Per Week:</label>
+            <input type="number" id="fuelCost">
+        </div>
+        <div class="percentageBoxes">
+            <div id="percentage20">20%</div>
+            <div id="percentage40">40%</div>
+            <div id="percentage60">60%</div>
+            <div id="percentage100">100%</div>
+        </div>
+    </div>
+
+    <div class="section" id="outputs">
+        <h2>Outputs</h2>
+        <div class="inputOutputPair">
+            <label>Lost Time:</label>
+            <span class="output">--</span>
+        </div>
+        <div class="inputOutputPair">
+            <label>Lost Money:</label>
+            <span class="output">--</span>
+        </div>
+        <div class="inputOutputPair">
+            <label>Additional Carbon:</label>
+            <span class="output">--</span>
+        </div>
+        <div class="inputOutputPair">
+            <label>Percentage Salary Decrease:</label>
+            <span class="output">--</span>
+        </div>
+        <div class="inputOutputPair">
+            <label>Final Salary:</label>
+            <span class="output">--</span>
+        </div>
+    </div>
+</body>
+
 
 <script src="js/main.js" type="module"></script>
+
+</html>
