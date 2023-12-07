@@ -8,12 +8,16 @@ function init() {
     // Get all the percentage boxes
     const percentageBoxes = document.querySelectorAll('.percentageBoxes div');
 
+    // Get all fuel
+    const fuelBoxes = document.querySelectorAll('.fuelSelector div');
+
     // Setup starting values
     setupSelectedPercentageBoxes(percentageBoxes[3]); // Assuming the last box (100%) is the default
+    setupSelectedFuel(fuelBoxes[0]); 
 
     // Add event listeners to inputs
     [currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput].forEach(input => {
-        input.addEventListener('input', () => calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes));
+        input.addEventListener('input', () => calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes));
     });
 
     // Add click event listeners to percentage boxes
@@ -22,13 +26,22 @@ function init() {
             // Mark the clicked box as selected
             percentageBoxes.forEach(b => b.classList.remove('selected'));
             box.classList.add('selected');
-            calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes);
+            calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes );
+        });
+    });
+
+    // Add click event listeners for fuel 
+    fuelBoxes.forEach(box => {
+        box.addEventListener('click', () => {
+            fuelBoxes.forEach(b => b.classList.remove('selected'));
+            box.classList.add('selected');
+            calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes);
         });
     });
 }
 
 
-function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes) {
+function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes) {
     // Get the values from inputs with default to "0" if blank or null
     const currentSalaryValue = currentSalaryInput.value || "0";
     const commuteTimeHoursValue = commuteTimeHoursInput.value || "0";
@@ -38,6 +51,11 @@ function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commute
     // Find selected percentage box
     const selectedPercentageBox = Array.from(percentageBoxes).find(box => box.classList.contains('selected'));
     const percentageBoxValue = selectedPercentageBox ? selectedPercentageBox.innerText : null;
+
+    // Find selected fuel box   
+    const selectedFuelBox = Array.from(fuelBoxes).find(box => box.classList.contains('selected'));
+    const selectedFuelBoxValue = selectedFuelBox ? selectedFuelBox.innerText : null;
+
 
     console.log("Calculating final values with:", 
         currentSalaryValue, 
@@ -106,7 +124,7 @@ function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commute
     const percentageSalaryDecrease = ((salaryPerHour - salaryPerHourIncludingCommuteFuel) / salaryPerHour) * 100;
 
     // Calculate additional carbon
-    const additionalCarbon = 10;
+    const additionalCarbon = calculateCarbon(hoursMinutesCommute.totalMinutesPerYear, selectedFuelBoxValue);
 
     // calcualte hourly paycut
     const hourlyPaycut = salaryPerHour - salaryPerHourIncludingCommuteFuel;
@@ -132,17 +150,41 @@ function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecre
     const lostMinutes = lostTime.totalMinutesPerYear % 60;
     lostTimeOutput.textContent = `Hours: ${lostHours}, Minutes: ${lostMinutes}`;
 
-    lostMoneyOutput.textContent = lostMoney;
-    additionalCarbonOutput.textContent = additionalCarbon;
-    percentageSalaryDecreaseOutput.textContent = percentageSalaryDecrease + '%';
-    finalSalaryOutput.textContent = finalSalary;
-    salaryPerHourOutput.textContent = salaryPerHour;
-    salaryPerHourTravelFuelOutput.textContent = salaryPerHourTravelFuel;
-    hourlyPaycutOutput.textContent = hourlyPaycut;
+    lostMoneyOutput.textContent = `${parseFloat(lostMoney).toFixed(2)}`;
+    additionalCarbonOutput.textContent = `${additionalCarbon} Kg`;
+    percentageSalaryDecreaseOutput.textContent = `${parseFloat(percentageSalaryDecrease).toFixed(2)}%`;
+    finalSalaryOutput.textContent = `${parseFloat(finalSalary).toFixed(2)}`;
+    salaryPerHourOutput.textContent = `${parseFloat(salaryPerHour).toFixed(2)}`;
+    salaryPerHourTravelFuelOutput.textContent = `${parseFloat(salaryPerHourTravelFuel).toFixed(2)}`;
+    hourlyPaycutOutput.textContent = `${parseFloat(hourlyPaycut).toFixed(2)}`;
+
+}
+function setupSelectedFuel(fuelBox) {
+    fuelBox.classList.add('selected');
 }
 
 function setupSelectedPercentageBoxes(percentageBox) {
     percentageBox.classList.add('selected');
 }
 
+function calculateCarbon(journeyMinutes, selectedFuelBoxValue) {
+    const emissionRatePetrolPerKm = 120; // grams of CO2 per kilometer, example for a petrol car
+    const emissionRateDeiselPerKm = 150;
+    const averageSpeedKmPerHour = 40; // average speed in km/h
+    const totalCommuteHoursPerYear = journeyMinutes/ 60;
+    // Calculate total distance traveled per year (in kilometers)
+    const totalDistanceKmPerYear = averageSpeedKmPerHour * totalCommuteHoursPerYear;
+    // Calculate total carbon emissions for the year (in grams)
+    const totalCarbonPetrolEmissions = totalDistanceKmPerYear * emissionRatePetrolPerKm;
+    const totalCarbonDesilEmissions = totalDistanceKmPerYear * emissionRateDeiselPerKm;
+
+    // If needed, convert total carbon emissions to kilograms or tons
+    const totalCarbonEmissionsPetrolKg= totalCarbonPetrolEmissions / 1000;
+    const totalCarbonEmissionsDieselKg= totalCarbonDesilEmissions / 1000;
+    if (selectedFuelBoxValue === 'Petrol') {
+        return totalCarbonEmissionsPetrolKg;
+    } else {
+        return totalCarbonEmissionsDieselKg;
+    }
+}
 window.addEventListener('load', init);
