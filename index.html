@@ -22,8 +22,17 @@
             <input type="number" id="currentSalary">
         </div>
         <div class="inputOutputPair">
-            <label for="commuteTime">Hours/Minutes Commute:</label>
-            <input type="text" id="commuteTime">
+            <label for="commuteTimeHours">Commute Time:</label>
+            <div class="timeInputs">
+                <div class="timeInputHourContainer">
+                    <label>H</label>
+                    <input type="number" id="commuteTimeHours" placeholder="H">
+                </div>
+                <div class="timeInputMinuteContainer">
+                    <label>M</label>
+                    <input type="number" id="commuteTimeMinutes" placeholder="M">
+                </div>
+            </div>
         </div>
         <div class="inputOutputPair">
             <label for="fuelCost">Cost of Fuel Per Week:</label>
@@ -63,6 +72,6 @@
 </body>
 
 
-<script src="js/main.js" type="module"></script>
+<script src="js/main.js" ></script>
 
 </html>

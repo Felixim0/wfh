@@ -40,3 +40,25 @@ body {
 .selected {
     background-color: lightgreen;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.inputOutputPair label {
+    flex-basis: 50%;
+    text-align: left;
+}
+
+.timeInputs {
+    display: flex;
+    flex-basis: 50%;
+    justify-content: space-between;
+}
+
+.timeInputs input {
+    width: 40%; /* Adjust width as needed */
+    text-align: left;
+}

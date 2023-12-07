@@ -1,42 +1,61 @@
-console.log('test');
-
-function setupSelectedPercentageBoxes(percentage100Box) {
-    percentage100.classList.add('selected');
-}
-
 function init() {
-    // Get all the inputs and outputs
-    const hoursPerWeekInput = doucment.querySelector('#hoursPerWeek');
+    // Get all the inputs
+    const hoursPerWeekInput = document.querySelector('#hoursPerWeek');
     const currentSalaryInput = document.querySelector('#currentSalary');
-    const commuteTimeInput = document.querySelector('#commuteTime');
+    const commuteTimeHoursInput = document.querySelector('#commuteTimeHours');
+    const commuteTimeMinutesInput = document.querySelector('#commuteTimeMinutes');
     const fuelCostInput = document.querySelector('#fuelCost');
 
-    const percentage20Box = document.querySelector('#percentage20');
-    const percentage40Box = document.querySelector('#percentage40');
-    const percentage60Box = document.querySelector('#percentage60');
-    const percentage100Box = document.querySelector('#percentage100');
+    // Get all the percentage boxes
+    const percentageBoxes = document.querySelectorAll('.percentageBoxes div');
 
+    // Setup starting values
+    setupSelectedPercentageBoxes(percentageBoxes[3]); // Assuming the last box (100%) is the default
 
-    // Add event Listeners
-    const inputs = document.querySelectorAll('#inputs input');
-    inputs.forEach(function(input) {
-        input.addEventListener('change', calculateFinalValues);
+    // Add event listeners to inputs
+    [hoursPerWeekInput, currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput].forEach(input => {
+        input.addEventListener('input', () => calculateFinalValues(hoursPerWeekInput, currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes));
     });
 
-    // Select all percentage boxes
-    const percentageBoxes = document.querySelectorAll('.percentageBoxes div');
-    percentageBoxes.forEach(function(box) {
-        box.addEventListener('click', function() {
-            calculateFinalValues();
+    // Add click event listeners to percentage boxes
+    percentageBoxes.forEach(box => {
+        box.addEventListener('click', () => {
+            // Mark the clicked box as selected
+            percentageBoxes.forEach(b => b.classList.remove('selected'));
+            box.classList.add('selected');
+            calculateFinalValues(hoursPerWeekInput, currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes);
         });
     });
-
 }
 
 
-function calculateFinalValues() {
-    console.log("Calculating final values...");
+function calculateFinalValues(hoursPerWeekInput, currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes) {
+    // Get the values from inputs
+    const hoursPerWeekValue = hoursPerWeekInput.value;
+    const currentSalaryValue = currentSalaryInput.value;
+    const commuteTimeHoursValue = commuteTimeHoursInput.value;
+    const commuteTimeMinutesValue = commuteTimeMinutesInput.value;
+    const fuelCostValue = fuelCostInput.value;
+
+    // Find selected percentage box
+    const selectedPercentageBox = Array.from(percentageBoxes).find(box => box.classList.contains('selected'));
+    const percentageBoxValue = selectedPercentageBox ? selectedPercentageBox.innerText : null;
+
+    console.log("Calculating final values with:", 
+        hoursPerWeekValue, 
+        currentSalaryValue, 
+        `${commuteTimeHoursValue}h ${commuteTimeMinutesValue}m`, 
+        fuelCostValue, 
+        percentageBoxValue);
+
+    // Continue with your calculation logic
+    // Update the output elements based on the calculations
+    // Example: document.querySelector('#outputElementId').innerText = calculatedValue;
 }
 
+
+function setupSelectedPercentageBoxes(percentageBox) {
+    percentageBox.classList.add('selected');
+}
 
 window.addEventListener('load', init);
