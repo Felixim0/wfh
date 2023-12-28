@@ -1,0 +1,38 @@
+{
+  "name": "Work From Home Calcaultor",
+  "short_name": "WFH calc",
+  "description": "Calcualte your yearly kills, cost and opportunity cost all in one place",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#336699",
+  "background_color": "#FFFFFF",
+
+  "icons": [
+	  {
+	    "src": "./icons/wfh-256.png",
+	    "sizes": "256x256",
+	    "type": "image/png"
+	  },
+	  {
+	    "src": "./icons/wfh-512.png",
+	    "sizes": "512x512",
+	    "type": "image/png"
+	  }
+  ],
+    "screenshots": [
+    {
+     "src": "pwa/screenshots/wide/wide1.png",
+     "sizes": "2396×1542",
+     "type": "image/gif",
+     "form_factor": "wide",
+     "label": "Homescreen WFH"
+    },
+    {
+     "src": "pwa/screenshots/narrow/narrow1.png",
+      "sizes": "1120×1580",
+      "type": "image/gif",
+      "form_factor": "narrow",
+      "label": "Homescreen WFH"
+    }
+ ]
+}

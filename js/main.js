@@ -1,4 +1,15 @@
-function init() {
+async function initServiceWorker() {
+  try {
+    await navigator.serviceWorker.register('./worker.js');
+  } catch (e) {
+    console.warn("Service Worker failed.  Falling back to 'online only'.", e);
+  }
+}
+
+async function init() {
+    //Add service worker
+    await initServiceWorker();
+
     // Get all the inputs
     const currentSalaryInput = document.querySelector('#currentSalary');
     const commuteTimeHoursInput = document.querySelector('#commuteTimeHours');
