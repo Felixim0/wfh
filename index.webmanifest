@@ -2,7 +2,7 @@
   "name": "Work From Home Calcaultor",
   "short_name": "WFH calc",
   "description": "Calcualte your yearly kills, cost and opportunity cost all in one place",
-  "start_url": "/",
+  "start_url": "/wfh/",
   "display": "standalone",
   "theme_color": "#336699",
   "background_color": "#FFFFFF",
