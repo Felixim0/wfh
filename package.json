@@ -1,0 +1,19 @@
+{
+  "name": "wfh",
+  "version": "1.0.0",
+  "description": "Curious how much fuel you use per year, how much time you waste commuting or how many people your emmissions will kill yearly?",
+  "main": "worker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Felixim0/wfh.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Felixim0/wfh/issues"
+  },
+  "homepage": "https://github.com/Felixim0/wfh#readme"
+}
