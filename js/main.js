@@ -13,17 +13,17 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
     const selectedPercentageBox = Array.from(percentageBoxes).find(box => box.classList.contains('selected'));
     const percentageBoxValue = selectedPercentageBox ? selectedPercentageBox.innerText : null;
 
-    // Find selected fuel box   
+    // Find selected fuel box
     const selectedFuelBox = Array.from(fuelBoxes).find(box => box.classList.contains('selected'));
     const selectedFuelBoxValue = selectedFuelBox ? selectedFuelBox.innerText : null;
 
     // Multiply by mp MULTIPLIER
     const mp = getPercentMultiplier(percentageBoxValue);
 
-    console.log("Calculating final values with:", 
-        currentSalaryValue, 
-        `${commuteTimeHoursValue}h ${commuteTimeMinutesValue}m`, 
-        fuelCostValue, 
+    console.log("Calculating final values with:",
+        currentSalaryValue,
+        `${commuteTimeHoursValue}h ${commuteTimeMinutesValue}m`,
+        fuelCostValue,
         percentageBoxValue,
         mp);
 
@@ -44,10 +44,10 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
 
     // Calculate worked time including commute
     const workedTimeIncludingCommute = getWorkedTimeIncludingCommute(hoursMinutesCommute, totalWorkingDaysMinusHoliday, workedTime);
-  
+
     // Calculate Sallery
     const currentSalary = parseInt(currentSalaryValue, 10);
-    const currentSalaryPerDay = currentSalary / 226;
+    const currentSalaryPerDay = currentSalary / totalWorkingDaysMinusHoliday;
     const costOfFuelPerDay = parseInt(fuelCostValue, 10) / 5;
 
     // Calculate daily lost time in minutes
@@ -69,7 +69,7 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
 
     // Calculate additional carbon (and other polutants)
     const emissionFactors = {
-      'totalCommuteHoursPerYear': hoursMinutesCommute.totalHoursPerYear, 
+      'totalCommuteHoursPerYear': hoursMinutesCommute.totalHoursPerYear,
       'transportMethod': selectedFuelBoxValue,
       'totalKmTravelled': null,
       'totalComuteKMPerYear': null,
@@ -88,15 +88,15 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
 
 function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecrease,
      finalSalary, salaryPerHour, salaryPerHourTravelFuel, hourlyPaycut) {
-    const lostMoneyOutput = document.querySelector('#moneyOutput');
-    const additionalCarbonOutput = document.querySelector('#additionalCarbon');
-    const percentageSalaryDecreaseOutput = document.querySelector('#percentageSalleryDecrease');
-    const finalSalaryOutput = document.querySelector('#finalSallery');
-    const salaryPerHourOutput = document.querySelector('#salaryPerHourOutput');
-    const salaryPerHourTravelFuelOutput = document.querySelector('#salaryPerHourTravelFuelOutput');
-    const hourlyPaycutOutput = document.querySelector('#hourlyPaycut');
+    const lostMoneyOutput = docQry('#moneyOutput');
+    const additionalCarbonOutput = docQry('#additionalCarbon');
+    const percentageSalaryDecreaseOutput = docQry('#percentageSalleryDecrease');
+    const finalSalaryOutput = docQry('#finalSallery');
+    const salaryPerHourOutput = docQry('#salaryPerHourOutput');
+    const salaryPerHourTravelFuelOutput = docQry('#salaryPerHourTravelFuelOutput');
+    const hourlyPaycutOutput = docQry('#hourlyPaycut');
 
-    const lostTimeOutput = document.querySelector('#lostTime');
+    const lostTimeOutput = docQry('#lostTime');
     const lostHours = Math.floor(lostTime.totalMinutesPerYear / 60);
     const lostMinutes = lostTime.totalMinutesPerYear % 60;
     lostTimeOutput.textContent = `Hours: ${lostHours}, Minutes: ${lostMinutes}`;
@@ -110,3 +110,6 @@ function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecre
     hourlyPaycutOutput.textContent = `${parseFloat(hourlyPaycut).toFixed(2)}`;
 }
 
+function docQry(elId) {
+  return document.querySelector(elId);
+}
