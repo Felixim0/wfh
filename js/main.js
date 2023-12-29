@@ -27,12 +27,13 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
         mp);
 
     // Calculation Logic
-    // 52 weeks a year * 5 = 260 working days - Bank Holidays(8) - 251 Days
-    // Assume 25 days of holiday used = 226 working days
+    // 52 weeks a year * 5 = 260 working days
+    // Assume 25 days of holiday  + 8 days bank holiday etc = 33
 
-    const totalWorkingDays = 260 * mp;
-    const totalWorkingDaysMinusHoliday = totalWorkingDays - 33;
+    const totalWorkingDays = Math.round(260 * mp);
+    const totalWorkingDaysMinusHoliday = totalWorkingDays - 33; // 227
     console.log(totalWorkingDays);
+    console.log(totalWorkingDaysMinusHoliday );
 
     // Commute time
     const hoursMinutesCommute = {
