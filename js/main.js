@@ -1,5 +1,6 @@
 import { getPercentMultiplier } from './conversionHelpers.js';
 import { calculateCarbon } from './carbonHelper.js';
+import { getLostTime, getWorkedTimeIncludingCommute, getCommuteTime, getWorkedTime } from './timeCalculations.js';
 
 export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes) {
     // Get the values from inputs with default to "0" if blank or null
@@ -36,43 +37,21 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
     console.log(totalWorkingDaysMinusHoliday );
 
     // Commute time
-    const hoursMinutesCommute = {
-        'hours': parseInt(commuteTimeHoursValue, 10), 
-        'minutes': parseInt(commuteTimeMinutesValue, 10)
-    };
-    hoursMinutesCommute.totalMinutesPerDay = (hoursMinutesCommute.hours * 60) + hoursMinutesCommute.minutes;
-    hoursMinutesCommute.totalMinutesPerYear = hoursMinutesCommute.totalMinutesPerDay * totalWorkingDaysMinusHoliday;
-    hoursMinutesCommute.totalHoursPerYear = hoursMinutesCommute.totalMinutesPerYear / 60;
+    const hoursMinutesCommute = getCommuteTime(commuteTimeHoursValue, commuteTimeMinutesValue, totalWorkingDaysMinusHoliday);
 
     // Calculate worked time (minus holiday)
-    const workedTime = {'hours': 7, 'minutes': 24}; // These are already numbers
-    workedTime.totalMinutesPerDay = (workedTime.hours * 60) + workedTime.minutes;
-    workedTime.totalMinutesPerYear = workedTime.totalMinutesPerDay * totalWorkingDaysMinusHoliday;
+    const workedTime = getWorkedTime(totalWorkingDaysMinusHoliday);
 
     // Calculate worked time including commute
-    const workedTimeIncludingCommute = {
-        'hours': workedTime.hours + hoursMinutesCommute.hours, 
-        'minutes': workedTime.minutes + hoursMinutesCommute.minutes
-    };
-    if (workedTimeIncludingCommute.minutes >= 60) {
-        workedTimeIncludingCommute.hours += Math.floor(workedTimeIncludingCommute.minutes / 60);
-        workedTimeIncludingCommute.minutes %= 60;
-    }
-    workedTimeIncludingCommute.totalMinutesPerDay = (workedTimeIncludingCommute.hours * 60) + workedTimeIncludingCommute.minutes;
-    workedTimeIncludingCommute.totalMinutesPerYear = workedTimeIncludingCommute.totalMinutesPerDay * totalWorkingDaysMinusHoliday;
-
+    const workedTimeIncludingCommute = getWorkedTimeIncludingCommute(hoursMinutesCommute, totalWorkingDaysMinusHoliday, workedTime);
+  
+    // Calculate Sallery
     const currentSalary = parseInt(currentSalaryValue, 10);
     const currentSalaryPerDay = currentSalary / 226;
     const costOfFuelPerDay = parseInt(fuelCostValue, 10) / 5;
 
     // Calculate daily lost time in minutes
-    const lostTimeMinutesPerDay = (workedTimeIncludingCommute.totalMinutesPerDay) - (workedTime.totalMinutesPerDay);
-    const lostTime = {
-        'hours': Math.floor(lostTimeMinutesPerDay / 60),
-        'minutes': lostTimeMinutesPerDay % 60
-    };
-    lostTime.totalMinutesPerDay = (lostTime.hours * 60) + lostTime.minutes;
-    lostTime.totalMinutesPerYear = lostTime.totalMinutesPerDay * totalWorkingDaysMinusHoliday;
+    const lostTime = getLostTime(workedTimeIncludingCommute, workedTime, totalWorkingDaysMinusHoliday );
 
     // Calculate Lost Money
     const fuelCostPerYear = costOfFuelPerDay * totalWorkingDaysMinusHoliday;
@@ -84,7 +63,6 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
     const totalWorkingHoursPerYearIncludingCommute = workedTimeIncludingCommute.totalMinutesPerYear / 60;
     const salaryMinusFuel = currentSalary - fuelCostPerYear;
     const salaryPerHourIncludingCommuteFuel = salaryMinusFuel / totalWorkingHoursPerYearIncludingCommute;
-
 
     // Calculate percentage sallery decrease
     const percentageSalaryDecrease = ((salaryPerHour - salaryPerHourIncludingCommuteFuel) / salaryPerHour) * 100;
@@ -106,7 +84,6 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
     // Calculate
     setOutputs(lostTime, fuelCostPerYear, additionalCarbon, percentageSalaryDecrease,
          salaryMinusFuel, salaryPerHour, salaryPerHourIncludingCommuteFuel, hourlyPaycut);
-
 }
 
 function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecrease,
