@@ -126,11 +126,10 @@ function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecre
 
     lostMoneyOutput.textContent = `${parseFloat(lostMoney).toFixed(2)}`;
     additionalCarbonOutput.textContent = `${parseFloat(additionalCarbon).toFixed(2)} Kg`;
-    percentageSalaryDecreaseOutput.textContent = `${parseFloat(percentageSalaryDecrease).toFixed(2)}%`;
+    percentageSalaryDecreaseOutput.textContent = isNaN(parseFloat(percentageSalaryDecrease)) ? "0%" : `${parseFloat(percentageSalaryDecrease).toFixed(2)}%`;
     finalSalaryOutput.textContent = `${parseFloat(finalSalary).toFixed(2)}`;
     salaryPerHourOutput.textContent = `${parseFloat(salaryPerHour).toFixed(2)}`;
     salaryPerHourTravelFuelOutput.textContent = `${parseFloat(salaryPerHourTravelFuel).toFixed(2)}`;
     hourlyPaycutOutput.textContent = `${parseFloat(hourlyPaycut).toFixed(2)}`;
-
 }
 
