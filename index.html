@@ -34,21 +34,34 @@
                 </div>
             </div>
         </div>
+
+        <div class="percentageBoxesTitleContainer">
+          <label id="percentageBoxTitle">Attendance Percentage</label>
+        </div>
         <div class="percentageBoxes">
             <div id="percentage20">20%</div>
             <div id="percentage40">40%</div>
             <div id="percentage60">60%</div>
+            <div id="percentage80">80%</div>
             <div id="percentage100">100%</div>
         </div>
-        <div class="inputOutputPair">
-            <label for="fuelCost">Cost of Fuel Per Week:</label>
-            <input type="number" id="fuelCost">
+
+        <div class="percentageBoxesTitleContainer">
+          <label id="percentageBoxTitle">Mode of transport</label>
         </div>
         <div class="fuelSelector">
             <div id="petrolSelector">Petrol</div>
             <div id="deiselSelector">Deisel</div>
+            <div id="walkBikeSelector">Walk/Bike</div>
+            <div id="trainSelector">Train</div>
         </div>
-    </div>
+
+        <div class="inputOutputPair">
+            <label for="fuelCost">Cost of Fuel Per Week:</label>
+            <input type="number" id="fuelCost">
+        </div>
+
+      </div>
 
     <div class="section" id="outputs">
         <h2>Outputs</h2>
@@ -89,6 +102,6 @@
 </body>
 
 
-<script src="js/main.js" ></script>
+<script type="module" src="js/setup.js" ></script>
 
 </html>

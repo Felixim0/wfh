@@ -1,58 +1,7 @@
-async function initServiceWorker() {
-  try {
-    await navigator.serviceWorker.register('./worker.js');
-  } catch (e) {
-    console.warn("Service Worker failed.  Falling back to 'online only'.", e);
-  }
-}
+import { getPercentMultiplier } from './conversionHelpers.js';
+import { calculateCarbon } from './carbonHelper.js';
 
-async function init() {
-    //Add service worker
-    await initServiceWorker();
-
-    // Get all the inputs
-    const currentSalaryInput = document.querySelector('#currentSalary');
-    const commuteTimeHoursInput = document.querySelector('#commuteTimeHours');
-    const commuteTimeMinutesInput = document.querySelector('#commuteTimeMinutes');
-    const fuelCostInput = document.querySelector('#fuelCost');
-
-    // Get all the percentage boxes
-    const percentageBoxes = document.querySelectorAll('.percentageBoxes div');
-
-    // Get all fuel
-    const fuelBoxes = document.querySelectorAll('.fuelSelector div');
-
-    // Setup starting values
-    setupSelectedPercentageBoxes(percentageBoxes[3]); // Assuming the last box (100%) is the default
-    setupSelectedFuel(fuelBoxes[0]); 
-
-    // Add event listeners to inputs
-    [currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput].forEach(input => {
-        input.addEventListener('input', () => calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes));
-    });
-
-    // Add click event listeners to percentage boxes
-    percentageBoxes.forEach(box => {
-        box.addEventListener('click', () => {
-            // Mark the clicked box as selected
-            percentageBoxes.forEach(b => b.classList.remove('selected'));
-            box.classList.add('selected');
-            calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes );
-        });
-    });
-
-    // Add click event listeners for fuel 
-    fuelBoxes.forEach(box => {
-        box.addEventListener('click', () => {
-            fuelBoxes.forEach(b => b.classList.remove('selected'));
-            box.classList.add('selected');
-            calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes);
-        });
-    });
-}
-
-
-function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes) {
+export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes) {
     // Get the values from inputs with default to "0" if blank or null
     const currentSalaryValue = currentSalaryInput.value || "0";
     const commuteTimeHoursValue = commuteTimeHoursInput.value || "0";
@@ -74,14 +23,16 @@ function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commute
         currentSalaryValue, 
         `${commuteTimeHoursValue}h ${commuteTimeMinutesValue}m`, 
         fuelCostValue, 
-        percentageBoxValue);
+        percentageBoxValue,
+        mp);
 
     // Calculation Logic
     // 52 weeks a year * 5 = 260 working days - Bank Holidays(8) - 251 Days
     // Assume 25 days of holiday used = 226 working days
 
-    const totalWorkingDays = 260;
+    const totalWorkingDays = 260 * mp;
     const totalWorkingDaysMinusHoliday = totalWorkingDays - 33;
+    console.log(totalWorkingDays);
 
     // Commute time
     const hoursMinutesCommute = {
@@ -90,6 +41,7 @@ function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commute
     };
     hoursMinutesCommute.totalMinutesPerDay = (hoursMinutesCommute.hours * 60) + hoursMinutesCommute.minutes;
     hoursMinutesCommute.totalMinutesPerYear = hoursMinutesCommute.totalMinutesPerDay * totalWorkingDaysMinusHoliday;
+    hoursMinutesCommute.totalHoursPerYear = hoursMinutesCommute.totalMinutesPerYear / 60;
 
     // Calculate worked time (minus holiday)
     const workedTime = {'hours': 7, 'minutes': 24}; // These are already numbers
@@ -136,12 +88,19 @@ function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commute
     // Calculate percentage sallery decrease
     const percentageSalaryDecrease = ((salaryPerHour - salaryPerHourIncludingCommuteFuel) / salaryPerHour) * 100;
 
-    // Calculate additional carbon
-    const additionalCarbon = calculateCarbon(hoursMinutesCommute.totalMinutesPerYear, selectedFuelBoxValue);
+    // Calculate additional carbon (and other polutants)
+    const emissionFactors = {
+      'totalCommuteHoursPerYear': hoursMinutesCommute.totalHoursPerYear, 
+      'transportMethod': selectedFuelBoxValue,
+      'totalKmTravelled': null,
+      'totalComuteKMPerYear': null,
+    }
+
+    const additionalCarbon = calculateCarbon(emissionFactors);
+    const carbonReleased = additionalCarbon.totalCarbon;
 
     // calcualte hourly paycut
     const hourlyPaycut = salaryPerHour - salaryPerHourIncludingCommuteFuel;
-
 
     // Calculate
     setOutputs(lostTime, fuelCostPerYear, additionalCarbon, percentageSalaryDecrease,
@@ -149,17 +108,6 @@ function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commute
 
 }
 
-function getPercentMultiplier(percentageBoxValue) {
-    if (percentageBoxValue === '100%') {
-        return 1
-    } else if (percentageBoxValue === '60%') {
-        return 0.6
-    } else if (percentageBoxValue === '40%') {
-        return 0.4
-    } else if (percentageBoxValue === '20%') {
-        return 0.2
-    }
-}
 function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecrease,
      finalSalary, salaryPerHour, salaryPerHourTravelFuel, hourlyPaycut) {
     const lostMoneyOutput = document.querySelector('#moneyOutput');
@@ -184,32 +132,4 @@ function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecre
     hourlyPaycutOutput.textContent = `${parseFloat(hourlyPaycut).toFixed(2)}`;
 
 }
-function setupSelectedFuel(fuelBox) {
-    fuelBox.classList.add('selected');
-}
 
-function setupSelectedPercentageBoxes(percentageBox) {
-    percentageBox.classList.add('selected');
-}
-
-function calculateCarbon(journeyMinutes, selectedFuelBoxValue) {
-    const emissionRatePetrolPerKm = 120; // grams of CO2 per kilometer, example for a petrol car
-    const emissionRateDeiselPerKm = 150;
-    const averageSpeedKmPerHour = 40; // average speed in km/h
-    const totalCommuteHoursPerYear = journeyMinutes/ 60;
-    // Calculate total distance traveled per year (in kilometers)
-    const totalDistanceKmPerYear = averageSpeedKmPerHour * totalCommuteHoursPerYear;
-    // Calculate total carbon emissions for the year (in grams)
-    const totalCarbonPetrolEmissions = totalDistanceKmPerYear * emissionRatePetrolPerKm;
-    const totalCarbonDesilEmissions = totalDistanceKmPerYear * emissionRateDeiselPerKm;
-
-    // If needed, convert total carbon emissions to kilograms or tons
-    const totalCarbonEmissionsPetrolKg= totalCarbonPetrolEmissions / 1000;
-    const totalCarbonEmissionsDieselKg= totalCarbonDesilEmissions / 1000;
-    if (selectedFuelBoxValue === 'Petrol') {
-        return totalCarbonEmissionsPetrolKg;
-    } else {
-        return totalCarbonEmissionsDieselKg;
-    }
-}
-window.addEventListener('load', init);
