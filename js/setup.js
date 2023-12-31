@@ -25,7 +25,7 @@ async function init() {
     const fuelBoxes = document.querySelectorAll('.fuelSelector div');
 
     // Setup starting values
-    setupSelectedPercentageBoxes(percentageBoxes[4]); // Assuming the last box (100%) is the default
+    setupSelectedPercentageBoxes(percentageBoxes[5]); // Assuming the last box (100%) is the default
     setupSelectedFuel(fuelBoxes[0]); 
 
     // Add event listeners to inputs
