@@ -13,4 +13,3 @@ export function getPercentMultiplier(percentageBoxValue) {
         return 0.2
     }
 }
-

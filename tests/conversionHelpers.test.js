@@ -12,6 +12,10 @@ test('Check 60% is float .6', () => {
   expect(getPercentMultiplier('60%')).toBe(.6);
 });
 
+test('Check 50% is float .5', () => {
+  expect(getPercentMultiplier('50%')).toBe(.5);
+});
+
 test('Check 40% is float .4', () => {
   expect(getPercentMultiplier('40%')).toBe(.4);
 });
