@@ -1,4 +1,4 @@
-import { getWorkedTime, getCommuteTime } from '../../js/timeCalculations.js';
+import { getWorkedTime } from '../../js/timeCalculations.js';
 
 // EXPECTED NUMBER OF WORKING DAYS
 const totalWorkingDaysMinusHoliday = 226;

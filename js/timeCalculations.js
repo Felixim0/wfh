@@ -18,20 +18,29 @@ export function getWorkedTime(totalWorkingDaysMinusHoliday) {
 }
 
 export function getWorkedTimeIncludingCommute(hoursMinutesCommute, totalWorkingDaysMinusHoliday, workedTime) {
+  // Work out daily commute minutes, daily worked hours
+  const dailyCommuteMinutes = hoursMinutesCommute.minutes + (hoursMinutesCommute.hours * 60);
+  const dailyWorkedMinutes = workedTime.minutes + (workedTime.hours * 60);
+  const totalDailyCommuteAndWorkMinutes = dailyCommuteMinutes + dailyWorkedMinutes;
+
+  // Create new time object with all of getWorkedTime attributes
   const workedTimeIncludingCommute = {
-      'hours': workedTime.hours + hoursMinutesCommute.hours, 
-      'minutes': workedTime.minutes + hoursMinutesCommute.minutes
+      hours: Math.floor(totalDailyCommuteAndWorkMinutes / 60),
+      minutes: totalDailyCommuteAndWorkMinutes % 60,
   };
-  if (workedTimeIncludingCommute.minutes >= 60) {
-      workedTimeIncludingCommute.hours += Math.floor(workedTimeIncludingCommute.minutes / 60);
-      workedTimeIncludingCommute.minutes %= 60;
-  }
-  workedTimeIncludingCommute.totalMinutesPerDay = (workedTimeIncludingCommute.hours * 60) + workedTimeIncludingCommute.minutes;
-  workedTimeIncludingCommute.totalMinutesPerYear = workedTimeIncludingCommute.totalMinutesPerDay * totalWorkingDaysMinusHoliday;
+
+  workedTimeIncludingCommute.totalMinutesPerDay = workedTimeIncludingCommute.minutes;
+  workedTimeIncludingCommute.totalHoursPerDay = workedTimeIncludingCommute.hours;
+
+  // Minutes to commute and work a day, times number of working days
+  const yearlyMinutes = totalDailyCommuteAndWorkMinutes * totalWorkingDaysMinusHoliday;
+  workedTimeIncludingCommute.totalHoursPerYear = Math.floor(yearlyMinutes / 60)
+  workedTimeIncludingCommute.totalMinutesPerYear = yearlyMinutes % 60;
+
   return workedTimeIncludingCommute;
 }
 
-export function getLostTime(workedTimeIncludingCommute, workedTime, totalWorkingDaysMinusHoliday  ) {
+export function getLostTime(workedTimeIncludingCommute, workedTime, totalWorkingDaysMinusHoliday) {
   const lostTimeMinutesPerDay = (workedTimeIncludingCommute.totalMinutesPerDay) - (workedTime.totalMinutesPerDay);
   const lostTime = {
       'hours': Math.floor(lostTimeMinutesPerDay / 60),
