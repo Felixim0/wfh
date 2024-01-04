@@ -36,14 +36,14 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
     console.log(totalWorkingDays);
     console.log(totalWorkingDaysMinusHoliday );
 
-    // Commute time
-    const hoursMinutesCommute = getCommuteTime(commuteTimeHoursValue, commuteTimeMinutesValue, totalWorkingDaysMinusHoliday);
+    // Commute time 
+    const commuteTime = getCommuteTime(commuteTimeHoursValue, commuteTimeMinutesValue, totalWorkingDaysMinusHoliday);
 
     // Calculate worked time (minus holiday)
     const workedTime = getWorkedTime(totalWorkingDaysMinusHoliday);
 
     // Calculate worked time including commute
-    const workedTimeIncludingCommute = getWorkedTimeIncludingCommute(hoursMinutesCommute, totalWorkingDaysMinusHoliday, workedTime);
+    const workedTimeIncludingCommute = getWorkedTimeIncludingCommute(commuteTime, totalWorkingDaysMinusHoliday, workedTime);
 
     // Calculate Sallery
     const currentSalary = parseInt(currentSalaryValue, 10);

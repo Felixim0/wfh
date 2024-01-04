@@ -9,34 +9,61 @@ describe('Test the Commute Time Maths', () => {
 
   test('Check For 0 commute time given no commute', () => {
     const expectedTime = {
-          hours: 0, 
-          minutes: 0, 
-          totalMinutesPerDay: 0, 
-          totalMinutesPerYear: 0,
-          totalHoursPerYear: 0,
+      input: {
+        hours: 0, 
+        minutes: 0, 
+      },
+      day: {
+        totalMinutes: 0,
+        hours: 0,
+        minutes: 0, 
+      },
+      year: {
+        totalMinutes: 0,
+        hours: 0,
+        minutes: 0,
+      },
     };
     expect(getCommuteTime(0, 0, workingDays)).toStrictEqual(expectedTime);
   });
 
-  test('Check For 226 Hours commute time given commute of 1 Hour', () => {
+  test('Given 1H commute check working days 220', () => {
     const expectedTime = {
-          hours: 1, 
-          minutes: 0, 
-          totalMinutesPerDay: 60,
-          totalMinutesPerYear: 60 * 226,
-          totalHoursPerYear: (60 * 226) / 60,
+      input: {
+        hours: 1, 
+        minutes: 0, 
+      },
+      day: {
+        totalMinutes: 60,
+        hours: 1,
+        minutes: 0,
+      },
+      year: {
+        totalMinutes: 13200,
+        hours: 220,
+        minutes: 0,
+      },
     };
-    const r = getCommuteTime(1, 0, workingDays);
+    const r = getCommuteTime(1, 0, 220);
     expect(r).toStrictEqual(expectedTime);
   });
 
- test('Check For 113 Hours commute time given commute of 35 Minutes', () => {
+ test('Given 35 Minutes commute check working days 226', () => {
     const expectedTime = {
-          hours: 0, 
-          minutes: 35, 
-          totalMinutesPerDay: 35,
-          totalMinutesPerYear: 35 * 226,
-          totalHoursPerYear: (35 * 226) / 60,
+      input: {
+        hours: 0, 
+        minutes: 35, 
+      },
+      day: {
+        totalMinutes: 35,
+        hours: 0,
+        minutes: 35,
+      },
+      year: {
+        totalMinutes: 7910,
+        hours: 131,
+        minutes: 50,
+      },
     };
     const r = getCommuteTime(0, 35, workingDays);
     expect(r).toStrictEqual(expectedTime);

@@ -1,41 +1,77 @@
+// Given 65 mins return "1" hour (ignore minutes)
+function getHoursFromMinutes(mins) {
+  return Math.floor(mins/60);
+}
+
+// Given 65 mins return "5" mins (ignore hours)
+function getLeftOverMinutes(mins) {
+  return mins % 60;
+}
+
+function getTotalMinutesFromHourMinuteObj(hourMinuteObj) {
+  return hourMinuteObj.minutes + (hourMinuteObj.hours * 60);
+}
+
+// Given an object with attribute "totalMinutesPerDay" add "hoursPerDay" and "minutesPerDay"
+function addHoursMinsPerDay(timeObj) {
+  if (!timeObj.day) { timeObj.day = {}; };
+  timeObj.day.totalMinutes = getTotalMinutesFromHourMinuteObj(timeObj.input);
+  timeObj.day.hours = getHoursFromMinutes(timeObj.day.totalMinutes);
+  timeObj.day.minutes = getLeftOverMinutes(timeObj.day.totalMinutes);
+}
+
+// Given an object with totalMinutesPerDay and WorkedDays add hours/mins a year
+function addHoursMinsPerYear(timeObj, totalWorkingDaysMinusHoliday) {
+  if (!timeObj.year) { timeObj.year = {}; };
+  timeObj.year.totalMinutes = timeObj.day.totalMinutes * totalWorkingDaysMinusHoliday;
+  timeObj.year.hours = getHoursFromMinutes(timeObj.year.totalMinutes);
+  timeObj.year.minutes = getLeftOverMinutes(timeObj.year.totalMinutes);
+}
+
+// Given Hours and Mins a commute takes, calculate daily, yearly minutes and hours
 export function getCommuteTime(commuteTimeHours, commuteTimeMinutes, totalWorkingDaysMinusHoliday) {
   const hoursMinutesCommute = {
-      'hours': parseInt(commuteTimeHours, 10), 
-      'minutes': parseInt(commuteTimeMinutes, 10)
+    input: {
+      hours: parseInt(commuteTimeHours, 10), 
+      minutes: parseInt(commuteTimeMinutes, 10)
+    },
   };
-  hoursMinutesCommute.totalMinutesPerDay = (hoursMinutesCommute.hours * 60) + hoursMinutesCommute.minutes;
-  hoursMinutesCommute.totalMinutesPerYear = hoursMinutesCommute.totalMinutesPerDay * totalWorkingDaysMinusHoliday;
-  hoursMinutesCommute.totalHoursPerYear = hoursMinutesCommute.totalMinutesPerYear / 60;
+
+  addHoursMinsPerDay(hoursMinutesCommute);
+  addHoursMinsPerYear(hoursMinutesCommute, totalWorkingDaysMinusHoliday);
 
   return hoursMinutesCommute;
 }
 
+// Given number of days and Hours and Minutes worked calculate daily, yearly minutes and hours
 export function getWorkedTime(totalWorkingDaysMinusHoliday) {
-  const workedTime = {'hours': 7, 'minutes': 24};
-  workedTime.totalMinutesPerDay = (workedTime.hours * 60) + workedTime.minutes;
-  workedTime.totalMinutesPerYear = workedTime.totalMinutesPerDay * totalWorkingDaysMinusHoliday;
+  const workedTime = {
+    input: {
+      'hours': 7,
+      'minutes': 24,
+    },
+  };
+
+  addHoursMinsPerDay(workedTime);
+  addHoursMinsPerYear(workedTime, totalWorkingDaysMinusHoliday);
+
   return workedTime;
 }
 
-export function getWorkedTimeIncludingCommute(hoursMinutesCommute, totalWorkingDaysMinusHoliday, workedTime) {
+export function getWorkedTimeIncludingCommute(commuteTime, totalWorkingDaysMinusHoliday, workedTime) {
   // Work out daily commute minutes, daily worked hours
-  const dailyCommuteMinutes = hoursMinutesCommute.minutes + (hoursMinutesCommute.hours * 60);
-  const dailyWorkedMinutes = workedTime.minutes + (workedTime.hours * 60);
-  const totalDailyCommuteAndWorkMinutes = dailyCommuteMinutes + dailyWorkedMinutes;
+  const totalDayCommuteAndWorkMins = commuteTime.day.totalMinutes + workedTime.day.totalMinutes;
 
   // Create new time object with all of getWorkedTime attributes
   const workedTimeIncludingCommute = {
-      hours: Math.floor(totalDailyCommuteAndWorkMinutes / 60),
-      minutes: totalDailyCommuteAndWorkMinutes % 60,
+    input: {
+      hours: getHoursFromMinutes(totalDayCommuteAndWorkMins),
+      minutes: getLeftOverMinutes(totalDayCommuteAndWorkMins),
+    }
   };
 
-  workedTimeIncludingCommute.totalMinutesPerDay = workedTimeIncludingCommute.minutes;
-  workedTimeIncludingCommute.totalHoursPerDay = workedTimeIncludingCommute.hours;
-
-  // Minutes to commute and work a day, times number of working days
-  const yearlyMinutes = totalDailyCommuteAndWorkMinutes * totalWorkingDaysMinusHoliday;
-  workedTimeIncludingCommute.totalHoursPerYear = Math.floor(yearlyMinutes / 60)
-  workedTimeIncludingCommute.totalMinutesPerYear = yearlyMinutes % 60;
+  addHoursMinsPerDay(workedTimeIncludingCommute);
+  addHoursMinsPerYear(workedTimeIncludingCommute, totalWorkingDaysMinusHoliday);
 
   return workedTimeIncludingCommute;
 }
