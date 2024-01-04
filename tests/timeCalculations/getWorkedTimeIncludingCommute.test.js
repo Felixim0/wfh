@@ -1,31 +1,9 @@
 import { getWorkedTimeIncludingCommute } from '../../js/timeCalculations.js';
+import { defaultTimeObj, newTimeObj } from './timeHelpers.js';
 
 // EXPECTED NUMBER OF WORKING DAYS
 const totalWorkingDaysMinusHoliday = 226;
 const workingDays = totalWorkingDaysMinusHoliday;
-
-// Helpers to set new workedTime a nd hoursMinuteCommute values
-const defaultTimeObj = 
-  {
-    input: {
-      hours: 0, 
-      minutes: 0, 
-    },
-    day: {
-      totalMinutes: 0,
-      hours: 0,
-      minutes: 0, 
-    },
-    year: {
-      totalMinutes: 0,
-      hours: 0,
-      minutes: 0,
-    },
-  };
-
-function newTimeObj() {
-  return JSON.parse(JSON.stringify(defaultTimeObj));
-}
 
 // Check getWorkedTime
 describe('Test the Worked Time Including Commute Maths', () => {

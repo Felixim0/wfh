@@ -77,23 +77,16 @@ export function getWorkedTimeIncludingCommute(commuteTime, totalWorkingDaysMinus
 }
 
 export function getLostTime(workedTimeIncludingCommute, workedTime, totalWorkingDaysMinusHoliday) {
-  const minutesDifference = Math.abs(workedTimeIncludingCommute.totalMinutesPerDay - workedTime.totalMinutesPerDay);
-  const hoursDifference = Math.abs(workedTimeIncludingCommute.totalHoursPerDay - workedTime.totalHoursPerDay);
-
+  const dayMinDiff = Math.abs(workedTimeIncludingCommute.day.totalMinutes - workedTime.day.totalMinutes);
   const lostTime = {
-      'hours': hoursDifference,
-      'minutes': minutesDifference,
+    input: {
+      hours: getHoursFromMinutes(dayMinDiff),
+      minutes: getLeftOverMinutes(dayMinDiff),
+    },
   };
 
-  lostTime.totalMinutesPerDay = lostTime.minutes;
-  lostTime.totalHoursPerDay = lostTime.hours;
-
-  // Now calculate yearly minutes/hours lost
-  const totalDiffMinsPerDay = lostTime.totalMinutesPerDay + (lostTime.totalHoursPerDay * 60);
-  const totalDiffMinsPerYear = totalDiffMinsPerDay * totalWorkingDaysMinusHoliday;
-
-  lostTime.totalHoursPerYear = Math.floor(totalDiffMinsPerYear / 60);
-  lostTime.totalMinutesPerYear = totalDiffMinsPerYear % 60;
+  addHoursMinsPerDay(lostTime);
+  addHoursMinsPerYear(lostTime, totalWorkingDaysMinusHoliday);
 
   return lostTime;
 }
