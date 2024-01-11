@@ -11,7 +11,7 @@ async function initServiceWorker() {
 async function init() {
     //Add service worker
     
-   // await initServiceWorker();
+    await initServiceWorker();
 
     // Get all the inputs
     const currentSalaryInput = document.querySelector('#currentSalary');

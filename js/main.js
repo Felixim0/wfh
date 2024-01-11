@@ -92,6 +92,23 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
          salaryMinusFuel, salaryPerHour, salaryPerHourIncludingCommuteFuel, hourlyPaycut);
 }
 
+function addComma(number) {
+  let parts = number.split('.'); // Split into whole and fractional parts
+  let wholePart = parts[0];
+  let decimalPart = parts[1];
+
+  let result = '';
+  let length = wholePart.length;
+
+  for (let i = length - 1; i >= 0; i--) {
+    result = wholePart[i] + result;
+    if ((length - i) % 3 === 0 && i !== 0) {
+      result = ',' + result; // Insert comma every 3 digits
+    }
+  }
+  return result + '.' + decimalPart;
+}
+
 function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecrease,
      finalSalary, salaryPerHour, salaryPerHourTravelFuel, hourlyPaycut) {
     const lostMoneyOutput = docQry('#moneyOutput');
@@ -105,10 +122,10 @@ function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecre
     const lostTimeOutput = docQry('#lostTime');
     lostTimeOutput.textContent = `Hours: ${(lostTime.year.hours).toFixed(0)}, Minutes: ${(lostTime.year.minutes).toFixed(0)}`;
 
-    lostMoneyOutput.textContent = `${parseFloat(lostMoney).toFixed(2)}`;
-    additionalCarbonOutput.textContent = `${parseFloat(additionalCarbon).toFixed(2)} Kg`;
+    lostMoneyOutput.textContent = `${addComma(parseFloat(lostMoney).toFixed(2))}`;
+    additionalCarbonOutput.textContent = `${addComma(parseFloat(additionalCarbon).toFixed(2))} Kg`;
     percentageSalaryDecreaseOutput.textContent = isNaN(parseFloat(percentageSalaryDecrease)) ? "0%" : `${parseFloat(percentageSalaryDecrease).toFixed(2)}%`;
-    finalSalaryOutput.textContent = `£ ${parseFloat(finalSalary).toFixed(2)}`;
+    finalSalaryOutput.textContent = `£ ${addComma(parseFloat(finalSalary).toFixed(2))}`;
     salaryPerHourOutput.textContent = `£ ${parseFloat(salaryPerHour).toFixed(2)}`;
     salaryPerHourTravelFuelOutput.textContent = `£ ${parseFloat(salaryPerHourTravelFuel).toFixed(2)}`;
     hourlyPaycutOutput.textContent = `${parseFloat(hourlyPaycut).toFixed(2)}`;
