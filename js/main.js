@@ -31,23 +31,24 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
     // 52 weeks a year * 5 = 260 working days
     // Assume 25 days of holiday  + 8 days bank holiday etc = 33
 
-    const totalWorkingDays = Math.round(260 * mp);
-    const totalWorkingDaysMinusHoliday = totalWorkingDays - 33; // 227
+    const totalWorkingDays = 260;
+    const totalWorkingDaysMinusHoliday = totalWorkingDays - 33;
+    const workingDaysMinusHolidayAttendance = totalWorkingDaysMinusHoliday * mp;
 
     // Commute time 
-    const commuteTime = getCommuteTime(commuteTimeHoursValue, commuteTimeMinutesValue, totalWorkingDaysMinusHoliday);
-    console.log('Commute Time: ', JSON.stringify(commuteTime));
+    const commuteTime = getCommuteTime(commuteTimeHoursValue, commuteTimeMinutesValue, workingDaysMinusHolidayAttendance);
 
     // Calculate worked time (minus holiday)
     const workedTime = getWorkedTime(totalWorkingDaysMinusHoliday);
-    console.log('Worked Time: ', JSON.stringify(workedTime));
 
     // Calculate worked time including commute
-    const workedTimeIncludingCommute = getWorkedTimeIncludingCommute(commuteTime, totalWorkingDaysMinusHoliday, workedTime);
-    console.log('Worked Time INCLUDING commute: ', JSON.stringify(workedTimeIncludingCommute));
+    const workedTimeIncludingCommute = getWorkedTimeIncludingCommute(
+        commuteTime, 
+        workingDaysMinusHolidayAttendance,
+        workedTime);
 
     // Calculate daily lost time in minutes
-    const lostTime = getLostTime(workedTimeIncludingCommute, workedTime, totalWorkingDaysMinusHoliday );
+    const lostTime = getLostTime(workedTimeIncludingCommute, workedTime, workingDaysMinusHolidayAttendance);
 
     // Calculate Salary 
     const currentSalary = parseInt(currentSalaryValue, 10);
@@ -55,7 +56,7 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
     const costOfFuelPerDay = parseInt(fuelCostValue, 10) / 5;
 
     // Calculate cost of fuel a year
-    const fuelCostPerYear = costOfFuelPerDay * totalWorkingDaysMinusHoliday;
+    const fuelCostPerYear = costOfFuelPerDay * workingDaysMinusHolidayAttendance;
 
     // Calculate salary per hour
     const salaryPerMinute = currentSalary / workedTime.year.totalMinutes;
@@ -63,7 +64,9 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
 
     // Calculate salary minus fuel with commute hours
     const salaryMinusFuel = currentSalary - fuelCostPerYear;
-    const salaryPerMinuteIncludingCommuteFuel = salaryMinusFuel / workedTimeIncludingCommute.year.totalMinutes;
+    const commuteTotalMins = commuteTime.year.totalMinutes
+    const workedTimeTotalMins = workedTime.year.totalMinutes;
+    const salaryPerMinuteIncludingCommuteFuel = salaryMinusFuel / (commuteTotalMins + workedTimeTotalMins);
     const salaryPerHourIncludingCommuteFuel = salaryPerMinuteIncludingCommuteFuel * 60; 
 
     // Calculate percentage salary decrease
@@ -99,7 +102,7 @@ function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecre
     const hourlyPaycutOutput = docQry('#hourlyPaycut');
 
     const lostTimeOutput = docQry('#lostTime');
-    lostTimeOutput.textContent = `Hours: ${lostTime.year.hours}, Minutes: ${lostTime.year.minutes}`;
+    lostTimeOutput.textContent = `Hours: ${(lostTime.year.hours).toFixed(2)}, Minutes: ${(lostTime.year.minutes).toFixed(2)}`;
 
     lostMoneyOutput.textContent = `${parseFloat(lostMoney).toFixed(2)}`;
     additionalCarbonOutput.textContent = `${parseFloat(additionalCarbon).toFixed(2)} Kg`;

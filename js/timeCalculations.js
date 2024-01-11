@@ -58,7 +58,10 @@ export function getWorkedTime(totalWorkingDaysMinusHoliday) {
   return workedTime;
 }
 
-export function getWorkedTimeIncludingCommute(commuteTime, totalWorkingDaysMinusHoliday, workedTime) {
+export function getWorkedTimeIncludingCommute(
+    commuteTime, 
+    workingDaysMinusHolidayAttendance, 
+    workedTime) {
   // Work out daily commute minutes, daily worked hours
   const totalDayCommuteAndWorkMins = commuteTime.day.totalMinutes + workedTime.day.totalMinutes;
 
@@ -71,7 +74,7 @@ export function getWorkedTimeIncludingCommute(commuteTime, totalWorkingDaysMinus
   };
 
   addHoursMinsPerDay(workedTimeIncludingCommute);
-  addHoursMinsPerYear(workedTimeIncludingCommute, totalWorkingDaysMinusHoliday);
+  addHoursMinsPerYear(workedTimeIncludingCommute, workingDaysMinusHolidayAttendance);
 
   return workedTimeIncludingCommute;
 }
