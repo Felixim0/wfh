@@ -5,6 +5,10 @@ body {
     margin: 0 auto; /* This centers the body content if the viewport is wider than 400px */
 }
 
+h3 {
+   line-height: 2em; 
+}
+
 .section {
     margin-bottom: 2em;
 }

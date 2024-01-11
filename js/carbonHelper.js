@@ -48,5 +48,9 @@ function emissionsFromCar(petrolOrDeisel, totalCommuteHoursPerYear) {
   }
 }
 
+export function getKilledPeople(carbonEmissions) {
+  return 3;
+}
+
 
   

@@ -1,5 +1,5 @@
 import { getPercentMultiplier } from './conversionHelpers.js';
-import { calculateCarbon } from './carbonHelper.js';
+import { getKilledPeople, calculateCarbon } from './carbonHelper.js';
 import { getLostTime, getWorkedTimeIncludingCommute, getCommuteTime, getWorkedTime } from './timeCalculations.js';
 
 export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes) {
@@ -111,6 +111,18 @@ function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecre
     salaryPerHourOutput.textContent = `£ ${parseFloat(salaryPerHour).toFixed(2)}`;
     salaryPerHourTravelFuelOutput.textContent = `£ ${parseFloat(salaryPerHourTravelFuel).toFixed(2)}`;
     hourlyPaycutOutput.textContent = `${parseFloat(hourlyPaycut).toFixed(2)}`;
+
+    // Human Statement
+    const statementContainer = docQry('#humanStatement');
+    // Remove any children
+    while (statementContainer.firstChild) statementContainer.removeChild(statementContainer.firstChild);
+    // Generate statement
+    const statement = `You will waste ${((lostTime.year.totalMinutes / 60) / 24).toFixed(0)} days commuting.
+                      Including extra time you spend and the cost of fuel, your sallery will decrease by ${percentageSalaryDecreaseOutput.textContent}`;
+    const h4 = document.createElement('h3');
+    h4.textContent = statement;
+    statementContainer.append(h4);
+    
 }
 
 function docQry(elId) {
