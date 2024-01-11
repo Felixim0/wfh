@@ -4,7 +4,7 @@ Curious how much fuel you use per year, how much time you waste commuting or how
 
 Only have access to basic numbers like weekly fuel cost, daily comute time and don't want to spend ages calculating the statistics above?
 
-Using only your sallery, hours/day travelled, office atttendance percentage and fuel type, you can easily get the stats using this application!
+Using only your salary, hours/day travelled, office atttendance percentage and fuel type, you can easily get the stats using this application!
 
 # Installing 
 Visit the GitHub pages:
