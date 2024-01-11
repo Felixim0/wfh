@@ -2,8 +2,12 @@ const CACHE = 'wfh';
 const FILES = [
   './',
   './index.css',
+  './index.html',
   './worker.js',
   './js/main.js',
+  './js/setup.js',
+  './js/timeCalculations.js',
+  './js/carbonHelper.js',
   './icons/wfh-256.png',
   './icons/wfh-512.png',
 ];

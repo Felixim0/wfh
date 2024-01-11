@@ -34,38 +34,56 @@
                 </div>
             </div>
         </div>
+
+        <div class="percentageBoxesTitleContainer">
+          <label id="percentageBoxTitle">Attendance Percentage</label>
+        </div>
         <div class="percentageBoxes">
             <div id="percentage20">20%</div>
             <div id="percentage40">40%</div>
             <div id="percentage60">60%</div>
+            <div id="percentage80">80%</div>
             <div id="percentage100">100%</div>
         </div>
-        <div class="inputOutputPair">
-            <label for="fuelCost">Cost of Fuel Per Week:</label>
-            <input type="number" id="fuelCost">
+
+        <div class="percentageBoxesTitleContainer">
+          <label id="percentageBoxTitle">Mode of transport</label>
         </div>
         <div class="fuelSelector">
             <div id="petrolSelector">Petrol</div>
             <div id="deiselSelector">Deisel</div>
+            <div id="walkBikeSelector">Walk/Bike</div>
+            <div id="trainSelector">Train</div>
         </div>
-    </div>
+
+        <div class="inputOutputPair hidden">
+            <label for="trainKM">KM travelled on train:</label>
+            <input type="number" id="trainKM">
+        </div>
+
+        <div class="inputOutputPair">
+            <label for="fuelCost">Cost of Fuel Per Week:</label>
+            <input type="number" id="fuelCost">
+        </div>
+
+      </div>
 
     <div class="section" id="outputs">
         <h2>Outputs</h2>
         <div class="inputOutputPair">
-            <label>Lost Time (to commute):</label>
+            <label>Lost Time (to commute) per year:</label>
             <span id="lostTime" class="output">--</span>
         </div>
         <div class="inputOutputPair">
-            <label>Lost Money:</label>
+            <label>Lost Money (to fuel) per year:</label>
             <span id="moneyOutput" class="output">--</span>
         </div>
         <div class="inputOutputPair">
-            <label>Final Sallery:</label>
-            <span id="finalSallery" class="output">--</span>
+            <label>Final Salary:</label>
+            <span id="finalSalary" class="output">--</span>
         </div>
         <div class="inputOutputPair">
-            <label>Additional Carbon:</label>
+            <label>Additional Carbon per year:</label>
             <span id="additionalCarbon" class="output">--</span>
         </div>
         <div class="inputOutputPair">
@@ -82,13 +100,15 @@
         </div>
         <div class="inputOutputPair">
             <label>Percentage Salary Decrease (inc travel and fuel):</label>
-            <span id="percentageSalleryDecrease" class="output">--</span>
+            <span id="percentageSalaryDecrease" class="output">--</span>
         </div>
- 
+
+        <div id="humanStatement">
+        </div>
     </div>
 </body>
 
 
-<script src="js/main.js" ></script>
+<script type="module" src="js/setup.js" ></script>
 
 </html>
