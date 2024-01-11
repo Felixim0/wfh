@@ -2,12 +2,13 @@ import { getPercentMultiplier } from './conversionHelpers.js';
 import { getKilledPeople, calculateCarbon } from './carbonHelper.js';
 import { getLostTime, getWorkedTimeIncludingCommute, getCommuteTime, getWorkedTime } from './timeCalculations.js';
 
-export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes) {
+export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes, trainKMinput) {
     // Get the values from inputs with default to "0" if blank or null
     const currentSalaryValue = currentSalaryInput.value || "0";
     const commuteTimeHoursValue = commuteTimeHoursInput.value || "0";
     const commuteTimeMinutesValue = commuteTimeMinutesInput.value || "0";
     const fuelCostValue = fuelCostInput.value || "0";
+    const trainKM = trainKMinput.value || "0";
 
     // Find selected percentage box
     const selectedPercentageBox = Array.from(percentageBoxes).find(box => box.classList.contains('selected'));
@@ -76,8 +77,8 @@ export function calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, 
     const emissionFactors = {
       'totalCommuteMinutesPerYear': commuteTime.year.totalMinutes,
       'transportMethod': selectedFuelBoxValue,
-      'totalKmTravelled': null,
-      'totalComuteKMPerYear': null,
+      'totalKmTravelled': trainKM,
+      'totalComuteKMPerYear': trainKM * workingDaysMinusHolidayAttendance,
     }
 
     const additionalCarbon = calculateCarbon(emissionFactors);

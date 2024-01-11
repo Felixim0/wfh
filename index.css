@@ -92,3 +92,9 @@ input::-webkit-inner-spin-button {
     width: 40%; /* Adjust width as needed */
     text-align: left;
 }
+
+.hidden {
+  display: none;
+}
+
+

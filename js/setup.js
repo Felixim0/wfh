@@ -10,13 +10,15 @@ async function initServiceWorker() {
 
 async function init() {
     //Add service worker
-    await initServiceWorker();
+    
+   // await initServiceWorker();
 
     // Get all the inputs
     const currentSalaryInput = document.querySelector('#currentSalary');
     const commuteTimeHoursInput = document.querySelector('#commuteTimeHours');
     const commuteTimeMinutesInput = document.querySelector('#commuteTimeMinutes');
     const fuelCostInput = document.querySelector('#fuelCost');
+    const trainKMinput = document.querySelector('#trainKM');
 
     // Get all the percentage boxes
     const percentageBoxes = document.querySelectorAll('.percentageBoxes div');
@@ -29,8 +31,8 @@ async function init() {
     setupSelectedFuel(fuelBoxes[0]); 
 
     // Add event listeners to inputs
-    [currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput].forEach(input => {
-        input.addEventListener('input', () => calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes));
+    [currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, trainKMinput].forEach(input => {
+        input.addEventListener('input', () => calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes, trainKMinput));
     });
 
     // Add click event listeners to percentage boxes
@@ -39,7 +41,7 @@ async function init() {
             // Mark the clicked box as selected
             percentageBoxes.forEach(b => b.classList.remove('selected'));
             box.classList.add('selected');
-            calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes );
+            calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes, trainKMinput);
         });
     });
 
@@ -48,7 +50,15 @@ async function init() {
         box.addEventListener('click', () => {
             fuelBoxes.forEach(b => b.classList.remove('selected'));
             box.classList.add('selected');
-            calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes);
+
+            // Show or hide km train
+            const kmTravelled = document.querySelector('#trainKM');
+            const parentElement = kmTravelled.parentElement;
+            parentElement.classList.add('hidden');
+            if (box.id === 'trainSelector') {
+              parentElement.classList.remove('hidden');
+            }
+            calculateFinalValues(currentSalaryInput, commuteTimeHoursInput, commuteTimeMinutesInput, fuelCostInput, percentageBoxes, fuelBoxes, trainKMinput);
         });
     });
 }
