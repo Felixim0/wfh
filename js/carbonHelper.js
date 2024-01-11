@@ -2,7 +2,7 @@
 export function calculateCarbon(emissionFactors) {
   // Get what the user inputted
   const transportMethod = emissionFactors.transportMethod;
-  const totalCommuteHoursPerYear = emissionFactors.totalCommuteMinutesPerYear * 60;
+  const totalCommuteHoursPerYear = emissionFactors.totalCommuteMinutesPerYear / 60;
   const totalCommuteKMPerYear = emissionFactors.totalComuteKMPerYear;
 
   // Options are Petrol, Deisel, Walk/Bike, Train
@@ -38,8 +38,8 @@ function emissionsFromCar(petrolOrDeisel, totalCommuteHoursPerYear) {
   const totalCarbonDesilEmissions = totalDistanceKmPerYear * emissionRateDeiselPerKm;
 
   // If needed, convert total carbon emissions to kilograms or tons
-  const totalCarbonEmissionsPetrolKg= totalCarbonPetrolEmissions / 1000;
-  const totalCarbonEmissionsDieselKg= totalCarbonDesilEmissions / 1000;
+  const totalCarbonEmissionsPetrolKg = totalCarbonPetrolEmissions / 1000;
+  const totalCarbonEmissionsDieselKg = totalCarbonDesilEmissions / 1000;
   
   if (petrolOrDeisel === 'Petrol') {
     return totalCarbonEmissionsPetrolKg;
