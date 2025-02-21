@@ -136,7 +136,7 @@ function setOutputs(lostTime, lostMoney, additionalCarbon, percentageSalaryDecre
     while (statementContainer.firstChild) statementContainer.removeChild(statementContainer.firstChild);
     // Generate statement
     const statement = `You will waste ${((lostTime.year.totalMinutes / 60) / 24).toFixed(0)} days commuting.
-                      Including extra time you spend and the cost of fuel, your sallery will decrease by ${percentageSalaryDecreaseOutput.textContent}`;
+                      Including extra time you spend and the cost of fuel, your salery will decrease by ${percentageSalaryDecreaseOutput.textContent}`;
     const h4 = document.createElement('h3');
     h4.textContent = statement;
     statementContainer.append(h4);
